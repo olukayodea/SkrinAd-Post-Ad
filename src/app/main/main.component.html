@@ -1,0 +1,74 @@
+<app-header></app-header>
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="text-center vertical-center" *ngIf="loading">
+            <div class="progress" style="width:300px;"> <!-- set to certain width -->
+                <div class="progress-bar progress-bar-striped active" role="progressbar" [style]="style">
+                    <span>
+                    {{loadingText}}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center vertical-center" *ngIf="!loading && !startSurvey && complete">
+            <h2>Hello {{userData.lastName + " " + userData.firstName + "!"}}</h2>
+            <p>Thank you for taking the <strong>{{advertData.title + " - " + advertData.caption}}</strong> campaign</p>
+            <p>You have been paidfor this survey, your response has previously been recorded for this survey.</p>
+            <button type="button" (click)="gohome()" class="btn btn-primary">Close</button>
+        </div>
+
+
+        <div class="text-center vertical-center" *ngIf="!loading && !startSurvey && !complete">
+            <h2>Hello {{userData.lastName + " " + userData.firstName + "!"}}</h2>
+            <p>We noticed that you saw the <strong>{{advertData.title + " - " + advertData.caption}}</strong> campaign on {{advertData.dateTaken}}, and we will like you to answer the following questions in our survey</p>
+            <p style="color: #FF0000">This is a paid survey</p>
+        
+            <p *ngIf="canTake">
+                <button type="button" (click)="start()" class="btn btn-primary">Take Survey</button>&nbsp;
+                <button type="button" (click)="gohome()" class="btn btn-danger">No Thanks</button>
+            </p>
+            <div class="alert alert-danger" role="alert" *ngIf="!canTake">
+                <h4 class="alert-heading"><i class="fas fa-exclamation-circle"></i> &nbsp; Hold Om!</h4>
+                <p>Thank you for taking time out to take this survey, your response has previously been recorded for this survey.</p>
+            </div>
+        </div>
+
+
+        <div class="text-center vertical-center" style="width:70%;" *ngIf="!loading && startSurvey && !complete">
+            <form [formGroup]="questionaire">
+                  <div class="card text-center mx-auto">
+                        <div class="card-body">
+                            <div class="alert alert-danger" role="alert" *ngIf="error">
+                                <h4 class="alert-heading"><i class="fas fa-exclamation-circle"></i> &nbsp; Error Occured!</h4>
+                                <p>There was an error saving your response at this time, please try again later.</p>
+                            </div>
+                            <h5 class="card-title">{{question}}</h5>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="answer" id="trueRadio" value="true" >
+                                <label class="form-check-label" for="trueRadio">
+                                    True
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="answer" id="falseRadio" value="false">
+                                <label class="form-check-label" for="falseRadio">
+                                    False
+                                </label>
+                            </div>
+
+                            <div *ngIf="answer.invalid && (answer.dirty || answer.touched)" class="invalid-feedback">
+                                <div *ngIf="answer.errors.required">Response is required.</div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <button type="submit" [disabled]="!questionaire.valid || questionaire.pending || processing" (click)="onSubmit()" class="btn btn-primary btn-block">{{buttonText}}</button>
+                        </div>
+                  </div>
+            </form>
+        </div>
+    </div>
+</div>
