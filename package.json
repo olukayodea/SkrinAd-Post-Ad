@@ -7,7 +7,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deployDev": "ng build --configuration dev && aws s3 sync dist/SkrinAd-Post-Ad s3://test.campaign.skrinad.me --delete",
+    "deploy": "ng build --prod && aws s3 sync dist/SkrinAd-Post-Ad s3://campaign.skrinad.me --delete"
   },
   "private": true,
   "dependencies": {
